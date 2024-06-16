@@ -1,0 +1,204 @@
+{% extends 'filebox/layout.html' %}
+{% load static %}
+{% load custom_filters %}
+
+
+<!-- Load search form -->
+{% block search_form %}
+    <form method="get" class="search-form">
+       {{ myFilter.form }}
+        <button type="submit" class="search-btn"><i class="fa fa-search"></i></button>
+    </form>
+{% endblock %}
+<!-- Search form ends here -->
+
+
+<!-- Load first three recent files -->
+{% block recent-files %}
+    <div class="recent-files">
+        <div class="recent-files-header">
+            <h4>Recent Files</h4>
+            <!-- Display success message -->
+            {% if messages %}
+                <div class="alert alert-success alert-dismissible fade show sys-feedback" role="alert">
+                    {% for message in messages %}
+                        <small>{{ message }}</small>
+                    {% endfor %}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endif %}
+
+        </div>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for recent_file in recent_files %}
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <span class="card-title-wrapper">
+                                {% if recent_file.file|file_extension == 'pdf' %}
+                                    <img src="{% static 'filebox/icons/pdf.png' %}" alt="PDF" class="file-icon">
+                                {% elif recent_file.file|file_extension == 'doc' or recent_file.file|file_extension == 'docx' %}
+                                    <img src="{% static 'filebox/icons/doc.png' %}" alt="Word" class="file-icon">
+                                {% elif recent_file.file|file_extension == 'jpeg' or recent_file.file|file_extension == 'png' %}
+                                    <img src="{% static 'filebox/icons/gallery.png' %}" alt="JEPG or PNG" class="file-icon">
+                                {% elif recent_file.file|file_extension == 'xls' or recent_file.file|file_extension == 'xlsx' %}
+                                    <img src="{% static 'filebox/icons/excel.png' %}" alt="Excel" class="file-icon">
+                                {% else %}
+                                    <img src="{% static 'filebox/icons/file.png' %}" alt="File" class="file-icon">
+                                {% endif %}
+                                <h5 class="card-title">{{ recent_file.title }} - {{ recent_file.file|file_extension }}</h5>
+                            </span>
+                            <h6 class="card-subtitle mb-2 text-body-secondary">{{ recent_file.uploaded_at }}</h6>
+                            <p class="card-text">{{ recent_file.description }}</p>
+                            <span class="card-link-wrapper">
+                                <a href="{% url 'filebox:download_file' recent_file.id %}" download  class="card-link download-btn"><i class="fa fa-download"></i> Download</a>
+                                <a title="Share file" class="card-link share-btn" data-bs-toggle="modal" data-bs-target="#shareFileModal{{ recent_file.id }}" data-bs-whatever="@mdo"><i class="fa fa-share"></i> Share</a>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                    <h4 class="alert alert-info">No recent file available</h4>
+
+                    <!-- Share File Modal -->
+                    <div class="modal fade" id="shareFileModal{{ recent_file.id }}" tabindex="-1" aria-labelledby="shareFileModalLabel{{ recent_file.id }}" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="shareFileModalLabel{{ recent_file.id }}">Share via email</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form method="POST" action="{% url 'filebox:share_file' recent_file.id %}">
+                                    {% csrf_token %}
+                                    <div class="mb-3">
+                                    <label for="recipient-email" class="col-form-label">Email:</label>
+                                    <input type="email" name="email" class="form-control" id="recipient-email" required>
+                                    </div>
+                                    <input type="submit" value="Share" class="my-btn submit-btn">
+                                </form>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+<!-- Recent files ends here -->
+
+
+<!-- Load all files -->
+{% block all-files %}
+    <div class="all-files">
+        <h4>All Files</h4>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                <th scope="col">File Title</th>
+                <th scope="col">Last Modified</th>
+                <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for file in files %}
+                <tr>
+                    <td>
+                        {% if file.file|file_extension == 'pdf' %}
+                            <img src="{% static 'filebox/icons/pdf.png' %}" alt="PDF" class="file-icon-small">
+                        {% elif file.file|file_extension == 'doc' or file.file|file_extension == 'docx' %}
+                            <img src="{% static 'filebox/icons/doc.png' %}" alt="Word" class="file-icon-small">
+                        {% elif file.file|file_extension == 'jpeg' or file.file|file_extension == 'png' %}
+                            <img src="{% static 'filebox/icons/gallery.png' %}" alt="JEPG or PNG" class="file-icon-small">
+                        {% elif file.file|file_extension == 'xls' or file.file|file_extension == 'xlsx' %}
+                            <img src="{% static 'filebox/icons/excel.png' %}" alt="Excel" class="file-icon-small">
+                        {% else %}
+                            <img src="{% static 'filebox/icons/file.png' %}" alt="File" class="file-icon-small">
+                        {% endif %}
+                        {{ file.title }}
+                    </td>
+                    <td>{{ file.uploaded_at }}</td>
+                    <td>
+                        <span>
+                            <a title="View file" data-bs-toggle="modal" data-bs-target="#viewFileModal{{ file.id }}">
+                                <i class="fa fa-eye manage-file-icon"></i>
+                            </a>
+                            <a  href="{% url 'filebox:download_file' file.id %}" title="Download file"><i class="fa fa-download manage-file-icon"></i></a>
+                            <a title="Share file" data-bs-toggle="modal" data-bs-target="#shareFileModal{{ file.id }}" data-bs-whatever="@mdo">
+                                <i class="fa fa-share manage-file-icon"></i>
+                            </a>
+                        </span>
+                    </td>
+                <!-- View File Modal -->
+                    <div class="modal fade" id="viewFileModal{{ file.id }}" tabindex="-1" aria-labelledby="viewFileModalLabel{{ file.id }}" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content" id="file-modal">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="viewFileModalLabel{{ file.id }}">{{ file.title }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                        <div class="card h-100">
+                                        <div class="card-body">
+                                            <span class="card-title-wrapper">
+                                                {% if file.file|file_extension == 'pdf' %}
+                                                    <img src="{% static 'filebox/icons/pdf.png' %}" alt="PDF" class="file-icon">
+                                                {% elif file.file|file_extension == 'doc' or file.file|file_extension == 'docx' %}
+                                                    <img src="{% static 'filebox/icons/doc.png' %}" alt="Word" class="file-icon">
+                                                {% elif file.file|file_extension == 'jpeg' or file.file|file_extension == 'png' %}
+                                                    <img src="{% static 'filebox/icons/gallery.png' %}" alt="JEPG or PNG" class="file-icon">
+                                                {% elif file.file|file_extension == 'xls' or file.file|file_extension == 'xlsx' %}
+                                                    <img src="{% static 'filebox/icons/excel.png' %}" alt="Excel" class="file-icon">
+                                                {% else %}
+                                                    <img src="{% static 'filebox/icons/file.png' %}" alt="File" class="file-icon">
+                                                {% endif %}
+                                                <h5 class="card-title">{{ file.title }} - {{ file.file|file_extension }}</h5>
+                                            </span>
+                                            <h6 class="card-subtitle mb-2 text-body-secondary">{{ file.uploaded_at }}</h6>
+                                            <p class="card-text">{{ file.description }}</p>
+                                            <span class="card-link-wrapper">
+                                                <a  href="{% url 'filebox:download_file' file.id %}" download class="card-link download-btn"><i class="fa fa-download"></i> Download</a>
+                                                <a class="card-link share-btn" data-bs-toggle="modal" data-bs-target="#shareFileModal{{ file.id }}" data-bs-whatever="@mdo"><i class="fa fa-share"></i> Share</a>
+                                            </span>
+                                        </div>
+                                        </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Share File Modal -->
+                    <div class="modal fade" id="shareFileModal{{ file.id }}" tabindex="-1" aria-labelledby="shareFileModalLabel{{ file.id }}" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="shareFileModalLabel{{ file.id }}">Share via email</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form method="POST" action="{% url 'filebox:share_file' file.id %}">
+                                    {% csrf_token %}
+                                    <div class="mb-3">
+                                    <label for="recipient-email" class="col-form-label">Email:</label>
+                                    <input type="email" name="email" class="form-control" id="recipient-email" required>
+                                    </div>
+                                    <input type="submit" value="Share" class="my-btn submit-btn">
+                                </form>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="4"><h4 class="alert alert-info">No files available</h4></td>
+                        </tr>
+                {% endfor %}
+            </tbody>
+            </table>
+    </div>
+{% endblock %}
+<!-- All files container ends here -->

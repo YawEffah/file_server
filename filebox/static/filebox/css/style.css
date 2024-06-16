@@ -1,0 +1,516 @@
+/**
+ * Styles for mobile-first design.
+ *
+ * These styles are optimized for mobile devices and provide a responsive layout
+ * that adapts to larger screens using media queries.
+ *
+ * @author [Collins Effah]
+ */
+
+
+ *{
+    margin: 0;
+    padding: 0;
+    transition: all 0.2s;
+    text-decoration: none;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif, tahoma;
+}
+
+body{
+    height: 100%;
+    padding-bottom: 50px;
+    background: #f0f2f5;
+    
+}
+
+header{
+    display: flex;
+    align-items: center;
+    height: 70px;
+    z-index: 999;
+    margin-bottom: 20px;
+    background: #f0f2f5;
+    justify-content: space-between;
+}
+
+header a{
+    color: #f04338;
+    text-decoration: none;
+}
+
+.form-heading h2{
+    font-size: 28px;
+}
+
+.form-heading p, .footer-text{
+    font-size: 14px;
+    color: #777;
+}
+
+.logo{
+    width: 60px;
+}
+
+
+.file-upload-form{
+    width: 300px;
+    margin: 10px auto;
+}
+ 
+.upload-form textarea,
+.upload-form input {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.file-upload-form{
+    width: 80%;
+    margin: 0 auto;
+}
+
+.file-upload-form input, 
+.file-upload-form textarea{
+    width: 100%;
+    margin: 5px 0 10px 0;
+    padding: 10px;
+}
+
+.file-upload-form textarea, 
+.update-file-form textarea{
+    width: 100%;
+    resize: none;
+    height: 130px;  
+    padding: 10px;
+    border:  1px solid #ccc;
+    border-radius: 5px;
+}
+
+.upload-btn{
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    background: #276cb4;
+}
+
+.my-btn{
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border-radius: 10px;
+    background: #276cb4;
+}
+
+.my-btn:hover{
+    opacity: 0.9;
+}
+
+/*Dashboard Style*/
+
+.w3-sidebar{
+    z-index: 999999;
+}
+
+.close-btn{
+    color: white;
+    background: #f04338;
+}
+
+.dashboard-header{
+    width: 100%;
+    background: #f0f2f5;
+}
+
+.branding{
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    background: #F9F9F9;
+    justify-content: center;
+}
+
+.branding .logo{
+    width: 80px;
+}
+
+.nav-item{
+    margin: 10px 0;
+}
+
+.nav-item i{
+    margin-right: 10px;
+}
+
+.nav li a:hover{
+    color: #f04338;
+}
+
+.active{
+    color:#f04338;
+}
+
+main{
+    padding: 20px;
+}
+
+.user-profile p{
+    font-size: 14px;
+    color: #60778f;
+}
+
+.search-form{
+    display: flex;
+    align-items: center;
+}
+
+.search-form label{
+    display: none;
+}
+
+.search-form input{
+    width: 150px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin-left: 20px;
+    border: none;
+    background: white;
+    outline: none;
+    color: #60778f;
+}
+
+.search-btn{
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    background: #f04338;
+    margin-left: -10px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.search-btn:hover{
+    color: #276cb4;
+    opacity: 0.9;
+}
+
+.logout-icon{
+    color: #276cb4;
+    padding: 10px 15px;
+    background: #D9D9D9;
+    border-radius: 5px;
+    font-size: 14px;
+    display: none;
+}
+
+.card{
+    border: none;
+    background: #fff;
+}
+
+.card .card-title{
+    color: #276cb4;
+}
+
+.card .card-subtitle{
+    color: #828282;
+    font-size: 14px;
+}
+
+.card a{
+    text-decoration: none;
+}
+
+.card-link-wrapper{
+    display: flex;
+    justify-content: space-between;
+}
+
+.card-link{
+    font-size: 10px;
+    padding: 6px 15px;
+}
+
+.card .download-btn{
+    color: white;
+    background: #f04338;
+    border-radius: 20px;
+}
+
+.download-btn:hover{
+    color: #276cb4;
+}
+
+.card .share-btn{
+    cursor: pointer;
+    border-radius: 5px;
+    background: #F2F2F2;
+}
+
+
+.recent-files-header{
+    display: flex;
+    margin-bottom: 15px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.card-title-wrapper{
+    display: flex;
+    align-items: center;
+    margin: 5px 0 10px 0;
+}
+
+.file-icon{
+    width: 30px;
+    margin-right: 10px;
+}
+
+.file-icon-small{
+    width: 15px;
+    margin-right: 10px;
+}
+
+.upload-file-btn{
+    color: #007bb5;
+    border: none;
+    font-size: 14px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    background: #cedff1;
+    box-shadow: 0 2px 2px #ccc;
+}
+
+.error p{
+    color: red;
+    font-size: 14px;
+}
+
+.upload-file-btn:hover{
+    background-color: #b8d4e5;
+}
+
+.upload-file-btn .fa{
+    color: #17526d;
+    padding: 0 6px;
+}
+
+.all-files table{
+    font-size: 14px;
+    background: white;
+    border-radius: 5px;
+}
+
+.all-files table th{
+    color: #276cb4;
+}
+
+.all-files table td{
+    color: #60778f;
+}
+
+.manage-file-icon{
+    padding: 5px 8;
+    font-size: 10px;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 1px solid #60778f;
+}
+
+.fa-trash:hover{
+    color: #f04338;
+}
+
+.manage-file-icon:hover{
+    border: none;
+    background: #F2F2F2;
+}
+
+hr{
+    border: 1px solid #D9D9D9;
+    margin: 40px 0;
+}
+
+.footer-heading{
+    color: #276cb4;
+    margin-bottom: 30px;
+}
+
+.footer-icon, .footer-text{
+    margin: 10px;
+    font-size: 14px;
+    color: #777;
+}
+
+.footer-icon:hover{
+    color: #f04338;
+}
+
+footer a{
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+#topBtn {
+    display: none; 
+    position: fixed; 
+    bottom: 20px; 
+    right: 10px; 
+    z-index: 99; 
+    border: none; 
+    outline: none; 
+    color: white; 
+    cursor: pointer; 
+    padding: 15px; 
+    border-top-right-radius: 50px;
+    border-top-left-radius: 50px;
+    font-size: 20px; 
+    background: #f04338; 
+  }
+  
+  #topBtn:hover {
+    background-color: #898989;
+    transition: 0.5s;
+  }
+
+/* Fixed/sticky icon bar (vertically aligned 50% from the top of the screen) */
+.icon-bar {
+    position: fixed;
+    top: 50%;
+    z-index: 9999;
+    right: 0;
+    display: none;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+  }
+  
+.icon-bar a {
+    display: block;
+    text-align: center;
+    padding: 10px;
+    transition: all 0.3s ease;
+    color: white;
+    font-size: 14px;
+  }
+  
+.icon-bar a:hover {
+    background-color: #60778f;
+  }
+  
+.github {
+    background: #000;
+    color: white;
+  }
+  
+.linkedin {
+    background: #007bb5;
+    color: white;
+    border-top-left-radius: 5px;
+  }
+  
+.youtube {
+    background: #f04338;
+    color: white;
+    border-bottom-left-radius: 5px;
+  }
+  
+.update-file-form{
+    top:0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    position: fixed;
+    z-index: 999999;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.6);
+}
+
+.update-file-form form{
+    width: 350px;
+    margin: 10px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.update-file-form input{
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.update-file-btns{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.update-file-btns .cancel-btn{
+    margin-left: 10px;
+    border-radius: 5px;
+    color: #f04338;
+    background: #cedff1;
+    text-decoration: none;
+}
+
+.update-file-form hr{
+    margin: 20px 0;
+}
+
+
+/**
+ * Media query for screens with a minimum width of 768px.
+ * Adjusts the styles for the logout icon and search form input.
+ */
+@media (min-width: 768px) {
+    .logout-icon {
+        display: block;
+    }
+
+    .logout-icon:hover{
+        color: #f04338;
+    }
+
+    .search-form input {
+        width: 250px;
+    }
+}
+
+
+/**
+ * Media query for screens with a minimum width of 1024 pixels.
+ * It includes styles for hiding and displaying certain elements, adjusting the width 
+ * of the main content, and modifying the layout of the footer.
+ */
+@media(min-width:1024px){
+
+    .menu-icon{
+        display: none;
+    }
+    
+    .icon-bar{
+        display: block;
+    }
+
+    main{
+        width: 90%;
+    }
+
+  }
+
+
+  @media(min-width:1366px){
+    main{
+        width: 85%;
+    }
+  }
+
