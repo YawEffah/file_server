@@ -1,0 +1,207 @@
+{% extends 'filebox/layout.html' %}
+{% load static %}
+{% load custom_filters %}
+
+
+<!-- Load search form -->
+{% block search_form %}
+    <form method="get" class="search-form">
+       {{ myFilter.form }}
+        <button type="submit" class="search-btn"><i class="fa fa-search"></i></button>
+    </form>
+{% endblock %}
+<!-- Search form ends here -->
+
+<!-- Load first three recent files -->
+{% block recent-files %}
+    <div class="recent-files">
+        <div class="recent-files-header">
+            <h4>Recent Files</h4>
+            <!-- Display success message -->
+            {% if messages %}
+                <div class="alert alert-success alert-dismissible fade show sys-feedback" role="alert">
+                    {% for message in messages %}
+                        <small>{{ message }}</small>
+                    {% endfor %}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endif %}
+            <!-- Success message ends here -->
+            <!-- Button trigger modal -->
+            <button class="upload-file-btn" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <i class="fa fa-upload"></i> Upload File
+            </button>
+        </div>
+
+        <!-- File Upload Modal -->
+        <div class="modal  fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h4 class="modal-title" id="exampleModalLabel">Add New File</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <br>
+                    <div class="upload-form">
+                        <form method="POST" action="{% url 'filebox:upload' %}" class="file-upload-form" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            {% for field in file_upload_form %}
+                                {{ field.label_tag }}
+                                {{ field }}
+                                {% if field.errors %}
+                                    <div class="error">
+                                        {% for error in field.errors %}
+                                            <p>{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                            {% if form.non_field_errors %}
+                                <div class="error">
+                                    {% for error in form.non_field_errors %}
+                                        <p>{{ error }}</p>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                            <input type="submit" value="Upload File" class="upload-btn my-btn submit-btn">
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+            </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for recent_file in recent_files %}
+                <div class="col">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <span class="card-title-wrapper">
+                                {% if recent_file.file|file_extension == 'pdf' %}
+                                    <img src="{% static 'filebox/icons/pdf.png' %}" alt="PDF" class="file-icon">
+                                {% elif recent_file.file|file_extension == 'doc' or recent_file.file|file_extension == 'docx' %}
+                                    <img src="{% static 'filebox/icons/doc.png' %}" alt="Word" class="file-icon">
+                                {% elif recent_file.file|file_extension == 'jpeg' or recent_file.file|file_extension == 'png' %}
+                                    <img src="{% static 'filebox/icons/gallery.png' %}" alt="JEPG or PNG" class="file-icon">
+                                {% elif recent_file.file|file_extension == 'xls' or recent_file.file|file_extension == 'xlsx' %}
+                                    <img src="{% static 'filebox/icons/excel.png' %}" alt="Excel" class="file-icon">
+                                {% else %}
+                                    <img src="{% static 'filebox/icons/file.png' %}" alt="File" class="file-icon">
+                                {% endif %}
+                                <h5 class="card-title">{{ recent_file.title }} - {{ recent_file.file|file_extension }}</h5>
+                            </span>
+                            <h6 class="card-subtitle mb-2 text-body-secondary">{{ recent_file.uploaded_at }}</h6>
+                            <p class="card-text">{{ recent_file.description }}</p>
+                            <span class="card-link-wrapper">
+                                <small class="card-subtitle">{{ recent_file.download_count }} | <i class="fa fa-download"></i> Downloads</small>
+                                <small class="card-subtitle">{{ recent_file.share_count }} | <i class="fa fa-share"></i> Shares</small>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                    <h4 class="alert alert-info">No recent files available</h4>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+<!-- Recent files end here -->
+
+<!-- Load all the files -->
+{% block all-files %}
+    <div class="all-files">
+        <h4>All Files</h4>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                <th scope="col">File Title</th>
+                <th scope="col">Last Modified</th>
+                <th scope="col">Manage</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for file in files %}
+                <tr>
+                    <td>
+                        {% if file.file|file_extension == 'pdf' %}
+                            <img src="{% static 'filebox/icons/pdf.png' %}" alt="PDF" class="file-icon-small">
+                        {% elif file.file|file_extension == 'doc' or file.file|file_extension == 'docx' %}
+                            <img src="{% static 'filebox/icons/doc.png' %}" alt="Word" class="file-icon-small">
+                        {% elif file.file|file_extension == 'jpeg' or file.file|file_extension == 'png' %}
+                            <img src="{% static 'filebox/icons/gallery.png' %}" alt="JEPG or PNG" class="file-icon-small">
+                        {% elif file.file|file_extension == 'xls' or file.file|file_extension == 'xlsx' %}
+                            <img src="{% static 'filebox/icons/excel.png' %}" alt="Excel" class="file-icon-small">
+                        {% else %}
+                            <img src="{% static 'filebox/icons/file.png' %}" alt="File" class="file-icon-small">
+                        {% endif %}
+                        {{ file.title }}
+                    </td>
+                    <td>{{ file.uploaded_at }}</td>
+                    <td>
+                        <span>
+                            <a title="View file" data-bs-toggle="modal" data-bs-target="#viewFileModal{{ file.id }}">
+                                <i class="fa fa-eye manage-file-icon"></i>
+                            </a>
+                            <a  href="{% url 'filebox:update' file.id %}" title="Edit file"><i class="fa fa-edit manage-file-icon"></i></a>
+                            <a href="{% url 'filebox:delete' file.id %}" title=" Delete File " onclick="return confirm('Are you sure?')"><i class="fa fa-trash manage-file-icon"></i></a>
+                        </span>
+                    </td>
+                
+                <!-- View File Modal -->
+                    <div class="modal fade" id="viewFileModal{{ file.id }}" tabindex="-1" aria-labelledby="viewFileModalLabel{{ file.id }}" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-content" id="file-modal">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="viewFileModalLabel{{ file.id }}">{{ file.title }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                        <div class="card h-100">
+                                        <div class="card-body">
+                                            <span class="card-title-wrapper">
+                                                {% if file.file|file_extension == 'pdf' %}
+                                                    <img src="{% static 'filebox/icons/pdf.png' %}" alt="PDF" class="file-icon">
+                                                {% elif file.file|file_extension == 'doc' or file.file|file_extension == 'docx' %}
+                                                    <img src="{% static 'filebox/icons/doc.png' %}" alt="Word" class="file-icon">
+                                                {% elif file.file|file_extension == 'jpeg' or file.file|file_extension == 'png' %}
+                                                    <img src="{% static 'filebox/icons/gallery.png' %}" alt="JEPG or PNG" class="file-icon">
+                                                {% elif file.file|file_extension == 'xls' or file.file|file_extension == 'xlsx' %}
+                                                    <img src="{% static 'filebox/icons/excel.png' %}" alt="Excel" class="file-icon">
+                                                {% else %}
+                                                    <img src="{% static 'filebox/icons/file.png' %}" alt="File" class="file-icon">
+                                                {% endif %}
+                                                <h5 class="card-title">{{ file.title }} - {{ file.file|file_extension }}</h5>
+                                            </span>
+                                            <h6 class="card-subtitle mb-2 text-body-secondary">{{ file.uploaded_at }}</h6>
+                                            <p class="card-text">{{ file.description }}</p>
+                                            <span class="card-link-wrapper">
+                                                <small class="card-subtitle">{{ file.download_count }} | <i class="fa fa-download"></i> Downloads</small>
+                                                <small class="card-subtitle">{{ file.share_count }} | <i class="fa fa-share"></i> Shares</small>
+                                            </span>
+                                        </div>
+                                        </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4"><h4 class="alert alert-info">No files available</h4></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+<!-- All files container ends here -->
+
+
+            

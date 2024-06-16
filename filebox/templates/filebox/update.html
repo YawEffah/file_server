@@ -1,0 +1,20 @@
+{% extends 'filebox/layout.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block recent-files %}
+    <div class="update-file-form">
+        <form method="post" class="file-update-form" enctype="multipart/form-data">
+            <h4 title="center">Update File</h4>
+            <hr>
+            {% csrf_token %}
+            {{ edit_form.as_p }}
+            <span class="update-file-btns">
+                <input type="submit" value="Update File" class="my-btn submit-btn">
+                <a href="{% url 'filebox:admin_dashboard'%}" class="my-btn cancel-btn">Cancel</a>
+            </span>
+        </form>
+    </div>
+    
+{% endblock %}
+            
