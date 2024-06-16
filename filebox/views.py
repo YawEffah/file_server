@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from .filters import FileFilter
 from django.http import FileResponse
 from django.core.mail import EmailMessage
-# from .signals import file_downloaded, file_shared
+from .signals import file_downloaded, file_shared
 import mimetypes
 from django.contrib import messages
 from django.core.validators import validate_email
