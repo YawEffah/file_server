@@ -69,14 +69,18 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
-                                <form method="POST" action="{% url 'filebox:share_file' recent_file.id %}">
-                                    {% csrf_token %}
-                                    <div class="mb-3">
-                                    <label for="recipient-email" class="col-form-label">Email:</label>
-                                    <input type="email" name="email" class="form-control" id="recipient-email" required>
-                                    </div>
-                                    <input type="submit" value="Share" class="my-btn submit-btn">
-                                </form>
+                                <!-- {% if recent_file %} -->
+                                    <form method="POST" action="{% url 'filebox:share_file' recent_file.id %}">
+                                        {% csrf_token %}
+                                        <div class="mb-3">
+                                        <label for="recipient-email" class="col-form-label">Email:</label>
+                                        <input type="email" name="email" class="form-control" id="recipient-email" required>
+                                        </div>
+                                        <input type="submit" value="Share" class="my-btn submit-btn">
+                                    </form>
+                                <!-- {% else %}
+                                    <p class="alert alert-info">No file available</p>
+                                {% endif %} -->
                             </div>
                         </div>
                         </div>
