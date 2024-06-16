@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
             const bsAlert = new bootstrap.Alert(alert);
             bsAlert.close();
         }
-    }, 5000);
+    }, 7000);
   });
   
   
