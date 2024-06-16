@@ -1,0 +1,38 @@
+{% extends 'registration/auth-layout.html' %}
+{% load static %}
+
+{% block auth-container %}
+    <section class="auth-container">
+        <div class="login-form auth-form">
+            <header class="header sticky-top">
+                <img src="{% static 'accounts/images/logo.png' %}" alt="logo" class="logo">
+                <p>Don’t have an account? <a href="{% url 'signup' %}">Sign up!</a></p>
+            </header>
+            <div class="form-heading">
+                <h2 class="text-center">Welcome Back</h2>
+                <p class="text-center">Login into your FileBox account</p>
+            </div>
+            <br>
+            <form action="{% url 'login' %}" method="POST">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="form-group">
+                        {{ field.label_tag }}
+                        {{ field }}
+                    </div>
+                {% endfor %}
+                {% if errors %}
+                    <div class="error">
+                        <p class="sys-feedback">{{ errors }}</p>
+                    </div>
+                {% endif %}
+                <p class="recover-password-link">
+                    <a class="recover-password-link" href="{% url 'password_reset' %}">Recover Password</a>
+                </p>
+               
+                <input type="submit" value="Login" class="my-btn btnsubmit-btn">
+            </form>
+            <p class="text-center footer-text">Ready to get started? Sign in now for seamless file access!</p>
+        </div>
+    </section>
+{% endblock %}

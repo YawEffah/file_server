@@ -1,0 +1,23 @@
+{% extends 'registration/auth-layout.html' %}
+{% load static %}
+
+{% block title %}<title>Activate Account | FileBox</title>{% endblock %}
+
+
+{% block auth-container %}
+    <section class="auth-container">
+        <div class="login-form auth-form">
+            <header class="header sticky-top">
+                <img src="{% static 'accounts/images/logo.png' %}" alt="logo" class="logo">
+            </header>
+            <div class="form-heading">
+                <P class="mail-icon text-center"><i class="fas fa-exclamation-circle"></i></P>
+                <h1 class="text-center">Account Activation Link Expired</h1>
+                <p class="text-center">
+                    Your activation link has expired. Please try creating your account again.
+                <br><strong>Thank you</strong>
+            </p>
+            </div>
+        </div>
+    </section>
+{% endblock %}

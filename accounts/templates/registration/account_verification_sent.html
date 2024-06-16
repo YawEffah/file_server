@@ -1,0 +1,33 @@
+{% extends 'registration/auth-layout.html' %}
+{% load static %}
+
+{% block title %}<title>Activate Account | FileBox</title>{% endblock %}
+
+
+{% block auth-container %}
+
+<!-- Display success message -->
+{% if messages %}
+<div class="alert alert-success alert-dismissible fade show sys-feedback" role="alert">
+    {% for message in messages %}
+        <small>{{ message }}</small>
+    {% endfor %}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
+<!-- Success message ends here -->
+
+    <section class="auth-container">
+        <div class="login-form auth-form">
+            <header class="header sticky-top">
+                <img src="{% static 'accounts/images/logo.png' %}" alt="logo" class="logo">
+            </header>
+            <div class="form-heading">
+                <P class="mail-icon text-center"><i class="fa fa-envelope"></i></P>
+                <h1 class="text-center">Check your email</h1>
+                <p class="text-center">A verification email has been sent to your email address. Please check your email to complete the registration process.</p>
+
+            </div>
+        </div>
+    </section>
+{% endblock %}

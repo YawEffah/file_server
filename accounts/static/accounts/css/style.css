@@ -1,0 +1,126 @@
+/**
+ * Styles for mobile-first design.
+ *
+ * These styles are optimized for mobile devices and provide a responsive layout
+ * that adapts to larger screens using media queries.
+ *
+ * @author [Collins Effah]
+ */
+
+
+ *{
+    margin: 0;
+    padding: 0;
+    transition: all 0.2s;
+    text-decoration: none;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif, tahoma;
+}
+
+body{
+    height: 100%;
+    padding-bottom: 50px;
+    background: #f0f2f5;
+    
+}
+
+header{
+    display: flex;
+    align-items: center;
+    height: 70px;
+    z-index: 999;
+    margin-bottom: 20px;
+    background: #f0f2f5;
+    justify-content: space-between;
+}
+
+header a{
+    color: #f04338;
+    text-decoration: none;
+}
+
+.form-heading h2{
+    font-size: 28px;
+}
+
+.form-heading p, .footer-text{
+    font-size: 14px;
+    color: #777;
+}
+
+.form-heading .mail-icon{
+    color: #f04338;
+    font-size: 60px;
+}
+
+.logo{
+    width: 60px;
+}
+
+.auth-container{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.auth-form{
+    width: 100%;
+    height: auto;
+    padding: 10px 30px;
+}
+
+.error p{
+    color: red;
+    font-size: 14px;
+}
+
+.auth-form form{
+    width: 300px;
+    margin: 10px auto;
+}
+ 
+.auth-form input, 
+.auth-form select{
+    width: 300px;
+    padding: 8px 15px;
+    margin: 5px  0 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.auth-form input[type="checkbox"]{
+    width: 20px;
+    margin: 0;
+}
+
+.recover-password-link{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.recover-password-link a{
+    text-align: right;
+    color: #f04338;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.my-btn{
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border-radius: 10px;
+    background: #f04338;
+}
+
+.footer-text{
+    margin: 10px;
+    font-size: 14px;
+    color: #777;
+}
+
+

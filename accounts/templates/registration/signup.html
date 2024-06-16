@@ -1,0 +1,59 @@
+{% extends 'registration/auth-layout.html' %}
+{% load static %}
+
+{% block title %}<title>Signup | FileBox</title>{% endblock %}
+
+
+{% block auth-container %}
+
+<!-- Display success message -->
+{% if messages %}
+<div class="alert alert-danger alert-dismissible fade show sys-feedback" role="alert">
+    {% for message in messages %}
+        <small>{{ message }}</small>
+    {% endfor %}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endif %}
+<!-- Success message ends here -->
+
+    <section class="auth-container">
+        <div class="signup-form auth-form">
+            <header class="header sticky-top">
+                <img src="{% static 'accounts/images/logo.png' %}" alt="logo" class="logo">
+                <p>Already have an account? <a href="{% url 'login' %}">Sign in!</a></p>
+            </header>
+            <div class="form-heading">
+                <h2 class="text-center">Get Started With FileBox</h2>
+                <p class="text-center">Create new a FileBox Account</p>
+            </div>
+            <br>
+            <form action="{% url 'signup' %}" method="POST">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="form-group">
+                        {{ field.label_tag }}
+                        {{ field }}
+                        {% if field.errors %}
+                            <div class="error">
+                                {% for error in field.errors %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                {% if form.non_field_errors %}
+                    <div class="error">
+                        {% for error in form.non_field_errors %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                <input type="submit" value="Create Account" class="my-btn submit-btn">
+            </form>
+            
+            <p class="text-center footer-text">Ready to get started? Sign up now for seamless file access!</p>
+        </div>
+    </section>
+{% endblock %}
