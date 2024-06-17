@@ -1,25 +1,25 @@
 from django.shortcuts import render, redirect
-from .forms import *
-from .models import UploadedFile
+from .forms import FileForm
+from .models import UploadedFile, Download, Email
 from django.utils import timezone
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .filters import FileFilter
 from django.http import FileResponse
 from django.core.mail import EmailMessage
-from .signals import file_downloaded, file_shared
 import mimetypes
 from django.contrib import messages
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
+from django.db.models import Count
 
 
-#Utility function to check if the user is an admin
+# Utility function to check if the user is an admin
 def is_admin(user):
     return user.groups.filter(name='admin').exists()
 
 
-#Redirects the user to the appropriate dashboard dashboard based on roles.
+# Redirects the user to the appropriate dashboard based on roles.
 @login_required
 def index(request):
     if is_admin(request.user):
@@ -28,11 +28,12 @@ def index(request):
         return redirect('filebox:user_dashboard')
     
 
-#Dashboard for Admin to upload files and view statistics
-@login_required
-@user_passes_test(is_admin, login_url='login')
+# Admin dashboard view for managing files and viewing analytics
 def admin_dashboard(request):
-    files = UploadedFile.objects.all().order_by('-id')
+    files = UploadedFile.objects.all().annotate(
+        download_count=Count('downloads'),
+        share_count=Count('sent_emails')
+    ).order_by('-id')
     myFilter = FileFilter(request.GET, queryset=files)
     filtered_files = myFilter.qs
 
@@ -46,46 +47,7 @@ def admin_dashboard(request):
     return render(request, 'filebox/admin-dashboard.html', context)
 
 
-#Function to handle file uploads
-@login_required
-@user_passes_test(is_admin, login_url='login')
-def upload_view(request):
-    if request.method == 'POST':
-        form = FileForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.instance.uploaded_at = timezone.now()
-            form.save()
-            messages.success(request, "File successfully uploaded")
-            return redirect(reverse('filebox:admin_dashboard'))
-        else:
-            messages.error(request, "File upload failed! please try again.")
-            return redirect(reverse('filebox:admin_dashboard'))
-            
-
-#Function to update files
-@login_required
-@user_passes_test(is_admin, login_url='login')
-def update_view(request, file_id):
-    file = UploadedFile.objects.get(pk=file_id)
-    form = FileForm(request.POST or None, instance=file)
-    if form.is_valid():
-        form.save()
-        messages.success(request, 'File successully updated')
-        return redirect('filebox:admin_dashboard')
-    return render(request, 'filebox/update.html', {'edit_form': form})
-
-
-#This function delete objects
-@login_required
-@user_passes_test(is_admin, login_url='login')
-def delelte_view(request, file_id):
-    file = UploadedFile.objects.get(pk=file_id)
-    file.delete()
-    messages.success(request, 'File successfully deleted')
-    return redirect('filebox:admin_dashboard')
-
-
-#Dashboard for users to view and download files
+# Dashboard for customer to view and download files
 @login_required
 def user_dashboard(request):
     if is_admin(request.user):  # Redirect admin to admin dashboard
@@ -104,6 +66,44 @@ def user_dashboard(request):
     return render(request, 'filebox/user-dashboard.html', context)
 
 
+# Function to handle file uploads
+@login_required
+@user_passes_test(is_admin, login_url='login')
+def upload_view(request):
+    if request.method == 'POST':
+        form = FileForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.instance.uploaded_at = timezone.now()
+            form.instance.uploaded_by = request.user
+            form.save()
+            messages.success(request, "File successfully uploaded")
+            return redirect(reverse('filebox:admin_dashboard'))
+        else:
+            messages.error(request, "File upload failed! Please try again.")
+            return redirect(reverse('filebox:admin_dashboard'))
+        
+
+# Function to update files
+@login_required
+@user_passes_test(is_admin, login_url='login')
+def update_view(request, file_id):
+    file = UploadedFile.objects.get(pk=file_id)
+    form = FileForm(request.POST or None, instance=file)
+    if form.is_valid():
+        form.save()
+        messages.success(request, 'File successfully updated')
+        return redirect('filebox:admin_dashboard')
+    return render(request, 'filebox/update.html', {'edit_form': form})
+
+
+# This function delete objects
+@login_required
+@user_passes_test(is_admin, login_url='login')
+def delete_view(request, file_id):
+    file = UploadedFile.objects.get(pk=file_id)
+    file.delete()
+    messages.success(request, 'File successfully deleted')
+    return redirect('filebox:admin_dashboard')
 
 
 # File download view (Handles file downloads)
@@ -116,11 +116,17 @@ def download_file(request, file_id):
     response['Content-Type'] = file_mime_type or 'application/octet-stream'
     response['Content-Disposition'] = f'attachment; filename="{downloaded_file.file.name}"'
    
-    file_downloaded.send(sender=UploadedFile, instance=downloaded_file)
+    # Create a Download record
+    Download.objects.create(
+        user=request.user,
+        file=downloaded_file,
+        downloaded_at=timezone.now()
+    )
+
     return response
 
 
-#File sharing view (Handles how files are shared via email)
+# File sharing view (Handles how files are shared via email)
 @login_required
 def share_file(request, file_id):
     try:
@@ -143,7 +149,13 @@ def share_file(request, file_id):
                 email.attach_file(shared_file.file.path)
                 email.send(fail_silently=False)
 
-                file_shared.send(sender=UploadedFile, instance=shared_file)
+                # Create an Email record
+                Email.objects.create(
+                    user=request.user,
+                    file=shared_file,
+                    recipient_email=recipient_email,
+                )
+                
                 messages.success(request, "File successfully shared.")
             except ValidationError:
                 messages.error(request, "Invalid email address provided.")
