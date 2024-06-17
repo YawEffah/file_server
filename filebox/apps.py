@@ -5,7 +5,3 @@ class FileboxConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'filebox'
     
-
-    def ready(self):
-        import filebox.signals
-        
