@@ -1,0 +1,48 @@
+<DOCTYPE! html>
+    <html>
+        <head>
+            <title>404</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <style>
+              html, body{
+                  background: #f0f2f5;
+              }
+
+            .container{
+                padding: 60px 20px;
+            }
+
+              h1{
+                  color: #f04338;
+                  font-size: 60px;
+                  font-weight: bold;
+                  text-align: center;
+              }
+
+              h2{
+                  font-size: 40px;
+                  font-weight: bold;
+                  text-align: center;
+              }
+
+              p, a{
+                  font-size: 18px;
+                  text-align: center;
+              }
+              a{
+                  color: #f04338;
+              }
+
+              p{
+                  color:#777;
+              }
+          </style>
+        </head>
+        <body>
+            <div class='container'>
+                <h1>404</h1>
+                <h2>Oops! <br> Page Unavailable</h2>
+                <p>Kindly click on the link below to visit the home page <br> <a href="{% url 'login' %}">Home</a></p>
+            </div>
+        </body>
+    </html>
