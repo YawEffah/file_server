@@ -1,0 +1,7 @@
+asgiref==3.8.1
+Django==5.0.6
+django-filter==24.2
+python-decouple==3.8
+python-env==1.0.0
+sqlparse==0.5.0
+tzdata==2024.1
